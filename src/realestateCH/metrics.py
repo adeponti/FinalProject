@@ -46,3 +46,49 @@ def compute_buy_price_per_m2(df: pd.DataFrame) -> pd.DataFrame:
     df["buy_price_per_m2"] = df["price_chf"] / df["area_m2"]
 
     return df
+
+
+def compute_price_to_rent_ratio(buy_df: pd.DataFrame, rent_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Compute the price-to-rent ratio by merging buy and rent datasets based on zip code.
+
+    Formula:
+        ratio = buy_price_chf / (12 * monthly_rent_chf)
+
+    Parameters
+    ----------
+    buy_df : pandas.DataFrame
+        Dataset containing purchase prices.
+    rent_df : pandas.DataFrame
+        Dataset containing monthly rental prices.
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with columns:
+        - zip_code
+        - buy_price_chf
+        - rent_price_chf
+        - price_to_rent_ratio
+    """
+
+    required_cols_buy = {"zip_code", "price_chf"}
+    required_cols_rent = {"zip_code", "price_chf"}
+
+    # Check columns exist
+    if not required_cols_buy.issubset(buy_df.columns):
+        raise ValueError("buy_df must contain 'zip_code' and 'price_chf' columns")
+    if not required_cols_rent.issubset(rent_df.columns):
+        raise ValueError("rent_df must contain 'zip_code' and 'price_chf' columns")
+
+    # Rename for clarity
+    buy_df = buy_df.rename(columns={"price_chf": "buy_price_chf"})
+    rent_df = rent_df.rename(columns={"price_chf": "rent_price_chf"})
+
+    # Merge on ZIP code
+    df = pd.merge(buy_df, rent_df, on="zip_code", how="inner")
+
+    # Compute ratio
+    df["price_to_rent_ratio"] = df["buy_price_chf"] / (12 * df["rent_price_chf"])
+
+    return df
