@@ -3,7 +3,11 @@ from realestateCH.metrics import (
     compute_rent_per_m2,
     compute_buy_price_per_m2,
     compute_price_to_rent_ratio,
+    average_rent_per_m2_by_canton,
+    rank_cantons_by_rent,
 )
+
+
 
 
 
@@ -54,3 +58,49 @@ def test_price_to_rent_ratio():
     assert "price_to_rent_ratio" in result.columns
     expected = 1000000 / (12 * 2000)
     assert result.loc[0, "price_to_rent_ratio"] == expected
+
+
+def test_average_rent_per_m2_by_canton():
+    df = pd.DataFrame({
+        "canton": ["VD", "VD", "ZH"],
+        "price_chf": [2000, 1500, 3000],
+        "area_m2": [50, 30, 100]
+    })
+
+    result = average_rent_per_m2_by_canton(df)
+
+    # Check that result contains the right columns
+    assert "canton" in result.columns
+    assert "avg_rent_per_m2" in result.columns
+
+    # Compute expected manually
+    vd_avg = ((2000/50) + (1500/30)) / 2
+    zh_avg = (3000/100)
+
+    # Should have 2 rows
+    assert len(result) == 2
+
+    # Extract values
+    res_dict = dict(zip(result["canton"], result["avg_rent_per_m2"]))
+
+    assert abs(res_dict["VD"] - vd_avg) < 1e-6
+    assert abs(res_dict["ZH"] - zh_avg) < 1e-6
+
+
+def test_rank_cantons_by_rent():
+    df = pd.DataFrame({
+        "canton": ["VD", "VD", "ZH", "GE"],
+        "price_chf": [2000, 1500, 3000, 4000],
+        "area_m2": [50, 30, 100, 80]
+    })
+
+    result = rank_cantons_by_rent(df)
+
+    # compute expected manually
+    vd_avg = ((2000/50) + (1500/30)) / 2
+    zh_avg = (3000/100)
+    ge_avg = (4000/80)
+
+    expected_order = ["GE", "VD", "ZH"]  # highest to lowest
+
+    assert list(result["canton"]) == expected_order
