@@ -13,3 +13,4 @@ src/realestateCH.egg-info/top_level.txt
 tests/test_clean.py
 tests/test_load.py
 tests/test_metrics.py
+tests/test_plots.py

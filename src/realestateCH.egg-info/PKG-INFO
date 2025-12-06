@@ -5,6 +5,7 @@ Summary: Tools for analysing Swiss real estate data
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 Requires-Dist: pandas
+Requires-Dist: matplotlib
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 
