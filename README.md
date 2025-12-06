@@ -1,9 +1,9 @@
-# realestateCH: Swiss Real Estate Analytics 📊🇨🇭
+# realestateCH: Swiss Real Estate Analytics
 
 realestateCH is a Python package designed to load, clean, analyze, and visualize Swiss real estate data (rent & buy markets).  
 Developed for the Business Analytics course at HEC Lausanne.
 
-## 🚀 Features
+## Features
 - Load rent & buy datasets  
 - Clean inconsistent or missing values  
 - Compute rent per m², buy per m², price-to-rent ratio  
@@ -11,7 +11,7 @@ Developed for the Business Analytics course at HEC Lausanne.
 - Fully tested with pytest + GitHub Actions  
 - Documentation website built with Quarto  
 
-## 📦 Installation
+## Installation
 
 To work with the **realestateCH** package, first clone the repository:
 
@@ -32,7 +32,7 @@ Run the test suite:
 pytest
 ```
 
-## 🧭 Quick Start
+## Quick Start
 
 ### Load datasets
 ```python
@@ -64,7 +64,7 @@ from realestateCH.plots import plot_average_rent_per_canton
 plot_average_rent_per_canton(rent_clean)
 ```
 
-## 📁 Repository Structure
+## Repository Structure
 ```text
 │
 ├── data_raw/
@@ -97,10 +97,10 @@ plot_average_rent_per_canton(rent_clean)
 └── README.md
 ```
 
-## 🌐 Documentation Website
+## Documentation Website
 The full documentation is available online through GitHub Pages.
 
-## 👥 Roles & Contributions
+## Roles & Contributions
 - Alessandro De Ponti — Role 1: Data collection & preparation  
 - Gabriele Miglioranzi — Role 2: Package development & documentation  
 - Federico Baldicchi — Role 2: Package development & documentation  
