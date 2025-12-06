@@ -97,8 +97,9 @@ plot_average_rent_per_canton(rent_clean)
 └── README.md
 ```
 
-## Documentation Website
-The full documentation is available online through GitHub Pages.
+## Documentation Website:
+https://adeponti.github.io/FinalProject/
+
 
 ## Roles & Contributions
 - Alessandro De Ponti — Role 1: Data collection & preparation  
