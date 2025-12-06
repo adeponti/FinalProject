@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: .
+
+website:
+  title: "realestateCH"
+  navbar:
+    left:
+      - text: "Overview"
+        href: index.qmd
+      - text: "Installation"
+        href: installation.qmd
+      - text: "Get Started"
+        href: get_started.qmd
+      - text: "Examples"
+        href: examples.qmd
+      - text: "API Reference"
+        href: api_reference.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

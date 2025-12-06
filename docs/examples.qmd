@@ -1,0 +1,93 @@
+---
+title: "Examples"
+---
+
+# Examples
+
+Here are a few practical examples showing how to use the functions
+included in the **realestateCH** Python package.
+
+These examples can be adapted directly in Jupyter notebooks, Python scripts,
+or in the dashboard built in Role 3.
+
+---
+
+## Example 1 — Load and clean both datasets (Rent + Buy)
+
+```python
+from realestateCH.load import load_data
+from realestateCH.clean import clean_data
+
+rent = load_data("data_raw/Total-Rent.csv")
+buy = load_data("data_raw/Total-Buy.csv")
+
+rent = clean_data(rent)
+buy = clean_data(buy)
+```
+
+---
+
+## Example 2 — Compute rent per m² and price per m²
+
+```python
+from realestateCH.metrics import (
+    compute_rent_per_m2,
+    compute_buy_price_per_m2
+)
+
+rent["rent_per_m2"] = compute_rent_per_m2(rent)
+buy["price_per_m2"] = compute_buy_price_per_m2(buy)
+```
+
+---
+
+## Example 3 — Merge datasets by ZIP code
+
+```python
+merged = rent.merge(
+    buy,
+    on="zip_code",
+    how="inner",
+    suffixes=("_rent", "_buy")
+)
+```
+
+---
+
+## Example 4 — Compute price-to-rent ratio
+
+```python
+from realestateCH.metrics import price_to_rent_ratio
+
+ratio_df = price_to_rent_ratio(buy, rent)
+ratio_df.head()
+```
+
+---
+
+## Example 5 — Plot rent distribution
+
+```python
+from realestateCH.plots import plot_rent_distribution
+
+plot_rent_distribution(rent)
+```
+
+---
+
+## Example 6 — Plot comparison between cantons
+
+```python
+from realestateCH.plots import (
+    plot_average_rent_per_canton,
+    plot_average_buy_price_per_canton
+)
+
+plot_average_rent_per_canton(rent)
+plot_average_buy_price_per_canton(buy)
+```
+
+---
+
+These examples illustrate the core operations supported by the package:
+loading, cleaning, merging, computing metrics, and visualizing real estate data.

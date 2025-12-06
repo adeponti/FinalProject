@@ -1,0 +1,71 @@
+---
+title: "API Reference"
+---
+
+# API Reference
+
+This page lists all the main public functions provided by the  
+**realestateCH** Python package.
+
+They are grouped into four categories:
+- Loading
+- Cleaning
+- Metrics
+- Plots
+
+---
+
+# Loading
+
+### `load_data(path)`
+Load a CSV file from disk into a pandas DataFrame.
+
+### `load_rent_data()`
+Load and automatically clean the Total-Rent dataset.
+
+### `load_buy_data()`
+Load and automatically clean the Total-Buy dataset.
+
+---
+
+# Cleaning
+
+### `clean_data(df)`
+Clean the dataset by:
+- converting numeric columns  
+- removing invalid or missing entries  
+- dropping duplicates  
+- standardizing canton names  
+
+---
+
+# Metrics
+
+### `compute_rent_per_m2(df)`
+Compute rent price per square meter.
+
+### `compute_buy_price_per_m2(df)`
+Compute buy price per square meter.
+
+### `price_to_rent_ratio(buy_df, rent_df)`
+Merge rent+buy datasets on ZIP code and compute the price-to-rent ratio.
+
+### `average_rent_per_m2_by_canton(df)`
+Compute average rent per m² for each canton.
+
+### `rank_cantons_by_rent(df)`
+Rank cantons by average rent per m².
+
+---
+
+# Plots
+
+### `plot_average_rent_per_canton(df)`
+Create a bar plot showing average rent per canton.
+
+### `plot_price_to_rent_ratio_hist(df)`
+Plot a histogram of the price-to-rent ratio values.
+
+---
+
+This API reference summarizes all core functionalities available in the package.

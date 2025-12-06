@@ -1,0 +1,27 @@
+---
+title: "Installation"
+---
+
+# Installation
+
+To work with the **realestateCH** package, first clone the repository:
+
+```bash
+git clone https://github.com/adeponti/FinalProject.git
+cd FinalProject
+```
+
+Install the package in editable mode:
+
+```bash
+pip install -e .
+```
+
+Run the test suite to confirm everything works:
+
+```bash
+pytest
+```
+
+You now have access to all functions for loading, cleaning,
+analyzing and visualizing Swiss real estate data.

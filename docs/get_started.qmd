@@ -1,0 +1,69 @@
+---
+title: "Get started"
+---
+
+# Getting started with `realestateCH`
+
+This page shows a minimal end-to-end example of how to use the
+**realestateCH** package with the project data.
+
+We will:
+
+1. Load the raw rent dataset  
+2. Clean the data  
+3. Compute rent price per square meter  
+4. Create a simple plot by canton  
+
+---
+
+## 1. Import the main functions
+
+```python
+from realestateCH.load import load_data
+from realestateCH.clean import clean_data
+from realestateCH.metrics import compute_rent_per_m2
+from realestateCH.plots import plot_average_rent_per_canton
+```
+
+---
+
+## 2. Load the rent dataset
+
+Here we use the file `data_raw/Total-Rent.csv` that was collected in Role 1.
+
+```python
+rent_df = load_data("data_raw/Total-Rent.csv")
+```
+
+---
+
+## 3. Clean the data
+
+We apply the cleaning logic defined in the package:
+numeric conversion, removal of invalid rows, duplicates, etc.
+
+```python
+clean_rent_df = clean_data(rent_df)
+```
+
+---
+
+## 4. Compute rent per square meter
+
+```python
+clean_rent_df["rent_per_m2"] = compute_rent_per_m2(clean_rent_df)
+```
+
+---
+
+## 5. Plot average rent per canton
+
+Finally, we create a simple bar plot that shows the average
+rent price per m² for each canton.
+
+```python
+plot_average_rent_per_canton(clean_rent_df)
+```
+
+This basic workflow is the starting point for more advanced analysis
+and for the interactive dashboard developed in Role 3.

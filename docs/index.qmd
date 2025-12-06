@@ -1,0 +1,16 @@
+---
+title: "Overview"
+---
+
+# realestateCH: Swiss Real Estate Analytics
+
+This package provides tools for loading, cleaning, analyzing, and visualizing
+Swiss real estate data (rent & buy markets).
+
+You can use it to:
+
+- Load raw datasets  
+- Clean inconsistent or missing values  
+- Compute rent and buy metrics  
+- Produce visualizations  
+- Integrate into dashboards (Role 3)

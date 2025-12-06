@@ -1,0 +1,114 @@
+[
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Installation",
+    "section": "",
+    "text": "Installation\nTo work with the realestateCH package, first clone the repository:\ngit clone https://github.com/adeponti/FinalProject.git\ncd FinalProject\nInstall the package in editable mode:\npip install -e .\nRun the test suite to confirm everything works:\npytest\nYou now have access to all functions for loading, cleaning, analyzing and visualizing Swiss real estate data."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Overview",
+    "section": "",
+    "text": "realestateCH: Swiss Real Estate Analytics\nThis package provides tools for loading, cleaning, analyzing, and visualizing Swiss real estate data (rent & buy markets).\nYou can use it to:\n\nLoad raw datasets\n\nClean inconsistent or missing values\n\nCompute rent and buy metrics\n\nProduce visualizations\n\nIntegrate into dashboards (Role 3)"
+  },
+  {
+    "objectID": "examples.html",
+    "href": "examples.html",
+    "title": "Examples",
+    "section": "",
+    "text": "Here are a few practical examples showing how to use the functions included in the realestateCH Python package.\nThese examples can be adapted directly in Jupyter notebooks, Python scripts, or in the dashboard built in Role 3.\n\n\n\nfrom realestateCH.load import load_data\nfrom realestateCH.clean import clean_data\n\nrent = load_data(\"data_raw/Total-Rent.csv\")\nbuy = load_data(\"data_raw/Total-Buy.csv\")\n\nrent = clean_data(rent)\nbuy = clean_data(buy)\n\n\n\n\nfrom realestateCH.metrics import (\n    compute_rent_per_m2,\n    compute_buy_price_per_m2\n)\n\nrent[\"rent_per_m2\"] = compute_rent_per_m2(rent)\nbuy[\"price_per_m2\"] = compute_buy_price_per_m2(buy)\n\n\n\n\nmerged = rent.merge(\n    buy,\n    on=\"zip_code\",\n    how=\"inner\",\n    suffixes=(\"_rent\", \"_buy\")\n)\n\n\n\n\nfrom realestateCH.metrics import price_to_rent_ratio\n\nratio_df = price_to_rent_ratio(buy, rent)\nratio_df.head()\n\n\n\n\nfrom realestateCH.plots import plot_rent_distribution\n\nplot_rent_distribution(rent)\n\n\n\n\nfrom realestateCH.plots import (\n    plot_average_rent_per_canton,\n    plot_average_buy_price_per_canton\n)\n\nplot_average_rent_per_canton(rent)\nplot_average_buy_price_per_canton(buy)\n\nThese examples illustrate the core operations supported by the package: loading, cleaning, merging, computing metrics, and visualizing real estate data."
+  },
+  {
+    "objectID": "examples.html#example-1-load-and-clean-both-datasets-rent-buy",
+    "href": "examples.html#example-1-load-and-clean-both-datasets-rent-buy",
+    "title": "Examples",
+    "section": "",
+    "text": "from realestateCH.load import load_data\nfrom realestateCH.clean import clean_data\n\nrent = load_data(\"data_raw/Total-Rent.csv\")\nbuy = load_data(\"data_raw/Total-Buy.csv\")\n\nrent = clean_data(rent)\nbuy = clean_data(buy)"
+  },
+  {
+    "objectID": "examples.html#example-2-compute-rent-per-m²-and-price-per-m²",
+    "href": "examples.html#example-2-compute-rent-per-m²-and-price-per-m²",
+    "title": "Examples",
+    "section": "",
+    "text": "from realestateCH.metrics import (\n    compute_rent_per_m2,\n    compute_buy_price_per_m2\n)\n\nrent[\"rent_per_m2\"] = compute_rent_per_m2(rent)\nbuy[\"price_per_m2\"] = compute_buy_price_per_m2(buy)"
+  },
+  {
+    "objectID": "examples.html#example-3-merge-datasets-by-zip-code",
+    "href": "examples.html#example-3-merge-datasets-by-zip-code",
+    "title": "Examples",
+    "section": "",
+    "text": "merged = rent.merge(\n    buy,\n    on=\"zip_code\",\n    how=\"inner\",\n    suffixes=(\"_rent\", \"_buy\")\n)"
+  },
+  {
+    "objectID": "examples.html#example-4-compute-price-to-rent-ratio",
+    "href": "examples.html#example-4-compute-price-to-rent-ratio",
+    "title": "Examples",
+    "section": "",
+    "text": "from realestateCH.metrics import price_to_rent_ratio\n\nratio_df = price_to_rent_ratio(buy, rent)\nratio_df.head()"
+  },
+  {
+    "objectID": "examples.html#example-5-plot-rent-distribution",
+    "href": "examples.html#example-5-plot-rent-distribution",
+    "title": "Examples",
+    "section": "",
+    "text": "from realestateCH.plots import plot_rent_distribution\n\nplot_rent_distribution(rent)"
+  },
+  {
+    "objectID": "examples.html#example-6-plot-comparison-between-cantons",
+    "href": "examples.html#example-6-plot-comparison-between-cantons",
+    "title": "Examples",
+    "section": "",
+    "text": "from realestateCH.plots import (\n    plot_average_rent_per_canton,\n    plot_average_buy_price_per_canton\n)\n\nplot_average_rent_per_canton(rent)\nplot_average_buy_price_per_canton(buy)\n\nThese examples illustrate the core operations supported by the package: loading, cleaning, merging, computing metrics, and visualizing real estate data."
+  },
+  {
+    "objectID": "api_reference.html",
+    "href": "api_reference.html",
+    "title": "API Reference",
+    "section": "",
+    "text": "API Reference\nThis page lists all the main public functions provided by the\nrealestateCH Python package.\nThey are grouped into four categories: - Loading - Cleaning - Metrics - Plots\n\n\n\nLoading\n\nload_data(path)\nLoad a CSV file from disk into a pandas DataFrame.\n\n\nload_rent_data()\nLoad and automatically clean the Total-Rent dataset.\n\n\nload_buy_data()\nLoad and automatically clean the Total-Buy dataset.\n\n\n\n\nCleaning\n\nclean_data(df)\nClean the dataset by: - converting numeric columns\n- removing invalid or missing entries\n- dropping duplicates\n- standardizing canton names\n\n\n\n\nMetrics\n\ncompute_rent_per_m2(df)\nCompute rent price per square meter.\n\n\ncompute_buy_price_per_m2(df)\nCompute buy price per square meter.\n\n\nprice_to_rent_ratio(buy_df, rent_df)\nMerge rent+buy datasets on ZIP code and compute the price-to-rent ratio.\n\n\naverage_rent_per_m2_by_canton(df)\nCompute average rent per m² for each canton.\n\n\nrank_cantons_by_rent(df)\nRank cantons by average rent per m².\n\n\n\n\nPlots\n\nplot_average_rent_per_canton(df)\nCreate a bar plot showing average rent per canton.\n\n\nplot_price_to_rent_ratio_hist(df)\nPlot a histogram of the price-to-rent ratio values.\n\nThis API reference summarizes all core functionalities available in the package."
+  },
+  {
+    "objectID": "get_started.html",
+    "href": "get_started.html",
+    "title": "Get started",
+    "section": "",
+    "text": "This page shows a minimal end-to-end example of how to use the realestateCH package with the project data.\nWe will:\n\nLoad the raw rent dataset\n\nClean the data\n\nCompute rent price per square meter\n\nCreate a simple plot by canton\n\n\n\n\nfrom realestateCH.load import load_data\nfrom realestateCH.clean import clean_data\nfrom realestateCH.metrics import compute_rent_per_m2\nfrom realestateCH.plots import plot_average_rent_per_canton\n\n\n\n\nHere we use the file data_raw/Total-Rent.csv that was collected in Role 1.\nrent_df = load_data(\"data_raw/Total-Rent.csv\")\n\n\n\n\nWe apply the cleaning logic defined in the package: numeric conversion, removal of invalid rows, duplicates, etc.\nclean_rent_df = clean_data(rent_df)\n\n\n\n\nclean_rent_df[\"rent_per_m2\"] = compute_rent_per_m2(clean_rent_df)\n\n\n\n\nFinally, we create a simple bar plot that shows the average rent price per m² for each canton.\nplot_average_rent_per_canton(clean_rent_df)\nThis basic workflow is the starting point for more advanced analysis and for the interactive dashboard developed in Role 3."
+  },
+  {
+    "objectID": "get_started.html#import-the-main-functions",
+    "href": "get_started.html#import-the-main-functions",
+    "title": "Get started",
+    "section": "",
+    "text": "from realestateCH.load import load_data\nfrom realestateCH.clean import clean_data\nfrom realestateCH.metrics import compute_rent_per_m2\nfrom realestateCH.plots import plot_average_rent_per_canton"
+  },
+  {
+    "objectID": "get_started.html#load-the-rent-dataset",
+    "href": "get_started.html#load-the-rent-dataset",
+    "title": "Get started",
+    "section": "",
+    "text": "Here we use the file data_raw/Total-Rent.csv that was collected in Role 1.\nrent_df = load_data(\"data_raw/Total-Rent.csv\")"
+  },
+  {
+    "objectID": "get_started.html#clean-the-data",
+    "href": "get_started.html#clean-the-data",
+    "title": "Get started",
+    "section": "",
+    "text": "We apply the cleaning logic defined in the package: numeric conversion, removal of invalid rows, duplicates, etc.\nclean_rent_df = clean_data(rent_df)"
+  },
+  {
+    "objectID": "get_started.html#compute-rent-per-square-meter",
+    "href": "get_started.html#compute-rent-per-square-meter",
+    "title": "Get started",
+    "section": "",
+    "text": "clean_rent_df[\"rent_per_m2\"] = compute_rent_per_m2(clean_rent_df)"
+  },
+  {
+    "objectID": "get_started.html#plot-average-rent-per-canton",
+    "href": "get_started.html#plot-average-rent-per-canton",
+    "title": "Get started",
+    "section": "",
+    "text": "Finally, we create a simple bar plot that shows the average rent price per m² for each canton.\nplot_average_rent_per_canton(clean_rent_df)\nThis basic workflow is the starting point for more advanced analysis and for the interactive dashboard developed in Role 3."
+  }
+]
