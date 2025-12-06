@@ -9,8 +9,10 @@ description = "Tools for analysing Swiss real estate data"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "pandas"
+    "pandas",
+    "matplotlib",
 ]
+
 
 [project.optional-dependencies]
 dev = [
