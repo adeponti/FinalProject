@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 def load_data(path: str):
     """
@@ -19,18 +20,24 @@ def load_data(path: str):
 from .clean import clean_data
 
 def load_rent_data():
-    """
-    Load and clean the official Total-Rent dataset.
-    """
-    path = "data_raw/Total-Rent.csv"
-    df = pd.read_csv(path)
-    return clean_data(df)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(script_dir))
+    
+    # FIXED: changed 'Cantons' to 'Canton'
+    file_path = os.path.join(project_root, 'data_raw', 'Total-Rent-WithCanton.csv')
+    
+    print(f"Loading rent data from: {file_path}")
+    df = pd.read_csv(file_path)
+    return df
 
 def load_buy_data():
-    """
-    Load and clean the official Total-Buy dataset.
-    """
-    path = "data_raw/Total-Buy.csv"
-    df = pd.read_csv(path)
-    return clean_data(df)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(script_dir))
+    
+    # FIXED: changed 'Cantons' to 'Canton'
+    file_path = os.path.join(project_root, 'data_raw', 'Total-Buy-WithCanton.csv')
+    
+    print(f"Loading buy data from: {file_path}")
+    df = pd.read_csv(file_path)
+    return df
 
