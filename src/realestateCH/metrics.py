@@ -155,3 +155,71 @@ def rank_cantons_by_rent(df: pd.DataFrame) -> pd.DataFrame:
     result = result.sort_values("avg_rent_per_m2", ascending=False).reset_index(drop=True)
 
     return result
+
+def compute_price_to_rent_ratio(buy_df: pd.DataFrame, rent_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Compute the price-to-rent ratio by merging buy and rent datasets based on zip code.
+    Formula: ratio = buy_price_chf / (12 * monthly_rent_chf)
+    """
+    # Validation check: ensure essential columns exist
+    cols_buy = {"price_chf", "zip_code"}
+    cols_rent = {"price_chf", "zip_code"}
+    
+    if not cols_buy.issubset(buy_df.columns) or not cols_rent.issubset(rent_df.columns):
+        return pd.DataFrame()
+
+    # Rename for clarity before merge
+    b = buy_df.rename(columns={"price_chf": "buy_price_chf"})
+    r = rent_df.rename(columns={"price_chf": "rent_price_chf"})
+
+    # Merge intelligently (use Canton if available to avoid duplicates across regions)
+    on_cols = ["zip_code"]
+    if "canton" in b.columns and "canton" in r.columns:
+        on_cols.append("canton")
+
+    # Inner join finds only locations where both Buy and Rent data exist
+    df = pd.merge(b, r, on=on_cols, how="inner")
+    
+    # Calculate Ratio: Price / Annual Rent
+    df["price_to_rent_ratio"] = df["buy_price_chf"] / (12 * df["rent_price_chf"])
+    
+    return df
+
+def rank_cantons_visual(df: pd.DataFrame, metric_name="Avg Rent/m²") -> pd.DataFrame:
+    """
+    Generates a ranking DataFrame with Gold/Silver/Bronze medals.
+    Calculates Price per m² automatically.
+    """
+    df = df.copy()
+    
+    # Safety Check
+    if 'area_m2' not in df.columns or 'price_chf' not in df.columns:
+        return pd.DataFrame()
+    
+    # 1. Calculate Metric
+    df['calculated_metric'] = df['price_chf'] / df['area_m2']
+    
+    # 2. Group by Canton and Sort
+    rank_df = df.groupby('canton')['calculated_metric'].mean().reset_index()
+    rank_df = rank_df.sort_values('calculated_metric', ascending=False).reset_index(drop=True)
+    
+    # 3. Add Ranking (1, 2, 3...)
+    rank_df.index += 1 
+    rank_df['Rank'] = rank_df.index
+    
+    # 4. Apply Medals
+    def set_medal(x):
+        if x == 1: return "🥇"
+        if x == 2: return "🥈"
+        if x == 3: return "🥉"
+        return str(x)
+    
+    rank_df['Rank'] = rank_df['Rank'].apply(set_medal)
+    
+    # 5. Final Formatting
+    rank_df = rank_df.rename(columns={
+        'canton': 'Canton',
+        'calculated_metric': metric_name
+    })
+    
+    return rank_df[['Rank', 'Canton', metric_name]]

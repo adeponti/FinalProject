@@ -11,6 +11,12 @@ Developed for the Business Analytics course at HEC Lausanne.
 - Fully tested with pytest + GitHub Actions  
 - Documentation website built with Quarto  
 
+## Roles & Contributions
+- Alessandro De Ponti — Role 1: Data collection & preparation  
+- Gabriele Miglioranzi — Role 2: Package development & documentation  
+- Federico Baldicchi — Role 2: Package development & documentation  
+- Vasko Georgiev — Role 3: Dashboard & Web App
+
 ## Installation
 
 To work with the **realestateCH** package, first clone the repository:
@@ -97,12 +103,20 @@ plot_average_rent_per_canton(rent_clean)
 └── README.md
 ```
 
+## Run the Final Web App
+
+To run the final web application, first clone the repository; in VS Code make sure that you are in the correct folder. Also make sure that you have installed the following: 
+-   Python 3.8 or higher 
+-   packages: streamlit, pandas, plotly, if not installed, you can do it via pip: 
+
+```bash
+pip install streamlit pandas plotly
+```
+Then make sure that the project folder is organized as above, and run the following command in the terminal: 
+
+```bash
+streamlit run app.py
+```
+
 ## Documentation Website:
 https://adeponti.github.io/FinalProject/
-
-
-## Roles & Contributions
-- Alessandro De Ponti — Role 1: Data collection & preparation  
-- Gabriele Miglioranzi — Role 2: Package development & documentation  
-- Federico Baldicchi — Role 2: Package development & documentation  
-- Vasko Georgiev — Role 3: Dashboard & Web App
