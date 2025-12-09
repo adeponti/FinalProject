@@ -1,0 +1,189 @@
+---
+title: "Homegate Data Collection -  Report"
+format: html
+editor: visual
+---
+
+# Introduction
+
+This report documents the data collection pipeline developed to obtain a clean, reproducible dataset of real estate listings across major Swiss cantons.\
+The objective was to collect rental and purchase offers from **Homegate**, one of the largest and most reputable Swiss real-estate portals, using an automated and fully reproducible workflow in Python.
+
+The final deliverables are:
+
+-   Two raw datasets:
+    -   `Total-Rent.csv` (21,444 listings)\
+    -   `Total-Buy.csv` (9,843 listings)
+-   A fully automated scraping pipeline written in Python using **Playwright**
+-   A clean set of ZIP codes (`zip_codes_selected.csv`) used as the sampling frame
+
+# 1. Data Sources
+
+### Primary Source: Homegate.ch
+
+We scraped listing pages corresponding to ZIP codes in six selected cantons:\
+**ZH, GE, VD, BE, SG, TI**.
+
+We intentionally limited extraction to a **maximum of 20 listings per ZIP code**, to balance coverage and computational cost.\
+This source provides:
+
+-   URL of each listing\
+-   Monthly rent / purchase price\
+-   Number of rooms\
+-   Living area (m²)
+
+### Justification
+
+Homegate is widely used in both academic research and industry analyses of the Swiss housing market.\
+There is no public API providing comparable data coverage, so **web scraping was the most appropriate method**.
+
+### Licenses, Limitations & Biases
+
+-   Data is publicly visible but remains the property of Homegate.\
+-   Listings change frequently → dataset represents a snapshot in time.\
+-   ZIP codes with no listings may reflect market scarcity, not data loss.\
+-   Pricing information may include formatting inconsistencies (e.g., apostrophes) handled later in cleaning.
+
+# 2. Data Collection Pipeline
+
+### 2.1 Technology Stack
+
+We used:
+
+-   **Python 3.10+**
+-   **Playwright (async version)**\
+-   `pandas` for ZIP file handling
+-   `asyncio` for controlled parallelization
+
+Installation steps for reproduction:
+
+``` bash
+pip install playwright pandas
+playwright install chromium
+```
+
+### 2.2 Why Playwright?
+
+Playwright allows:
+
+-   Automated browser control\
+-   Reliable rendering of dynamic content (Homegate uses React/Vue heavily)
+-   Proper cookie handling\
+-   Better resilience against bot detection compared to raw HTTP scraping
+
+### 2.3 Anti-Ban Measures
+
+To avoid access denials and IP throttling:
+
+-   **Headless browsing was disabled** → Human-like behavior\
+-   **Cookies were automatically accepted**
+-   **Only 8 ZIP codes were scraped in parallel**
+-   **Retries were implemented** for failed page loads\
+-   **Short waiting times** ensured content fully loaded before extraction\
+-   **Fallback listings were explicitly discarded** to avoid artificial inflation
+
+This strategy allowed the scraper to run **18 consecutive hours** without interruption or rate-limit bans.
+
+### 2.4 Batch-Based Parallel Execution
+
+Instead of opening 1000+ pages at once, ZIP codes were processed in batches:
+
+```         
+for i in range(0, len(zip_list), CONCURRENCY):
+    batch = zip_list[i:i+CONCURRENCY]
+    asyncio.gather(...)
+```
+
+This:
+
+-   Stabilizes memory consumption\
+-   Avoids suspicious traffic spikes\
+-   Ensures reproducibility
+
+The final configuration used **8 parallel pages at a time**, which was empirically the optimal balance.
+
+### 2.5 Handling “Empty Result” Conditions (Buy Pipeline)
+
+Two special cases required robust logic:
+
+1.  **Explicit "no results" message**\
+    Homegate displays a message such as *“il n’y a aucun résultat”*.\
+    When detected, the scraper stops immediately and returns zero rows.
+
+2.  **Fallback recommendations**\
+    Homegate often shows *nearby suggestions* when a ZIP has few listings.\
+    These were excluded to avoid:
+
+    -   Duplicate listings across ZIP codes\
+    -   Misclassification of observations
+
+Only the **main result list** (`data-test='result-list'`) was scraped.
+
+This ensured a clean dataset with no contamination from surrounding areas.
+
+# 3. Cleaning & Wrangling
+
+### 3.1 Extracting Numerical Values
+
+Many fields (prices, room counts, areas) contain formatting such as:
+
+-   Apostrophes (`CHF 1’800.–`)
+-   Spaces
+-   Mixed French/German symbols
+
+A helper function ensured harmonized extraction:
+
+``` python
+def clean_number(text):
+    text = text.replace("’", "").replace(" ", "")
+    m = re.search(r"(\d+(?:\.\d+)?)", text)
+    return m.group(1) if m else "N/A"
+```
+
+### 3.2 Tidy Output Structure
+
+Both datasets follow the same schema:
+
+| column    | description                   |
+|-----------|-------------------------------|
+| zip       | ZIP code of listing           |
+| url       | Direct link to listing        |
+| price_chf | Parsed rent or purchase price |
+| rooms     | Number of rooms               |
+| area_m2   | Living area in square meters  |
+
+### 3.3 Reproducibility Guarantees
+
+-   **No manual Excel editing was performed.**\
+-   All transformations occur inside the Python script.\
+-   Raw and cleaned files are kept separate (`data_raw/`, `data/`).\
+-   Playwright ensures identical behavior across machines.
+
+# 4. Folder Structure
+
+```         
+project/
+ ├── data_raw/
+ │     ├── Total-Rent.csv
+ │     ├── Total-Buy.csv
+ │     └── zip_codes_selected.csv
+ ├── ScraperScript
+ │     ├── scrape_homegate_rent.py
+ │     ├── scrape_homegate_buy.py
+ └── Data Collection - Report.qmd   ← this file
+```
+
+# 5. Summary
+
+We implemented a stable, fully automated, highly robust data collection pipeline for Swiss real-estate listings using Python and Playwright.\
+The scraper successfully collected over **31,000 listings** across rental and purchase markets without triggering bans or data corruption.
+
+Key strengths of the workflow:
+
+-   **Reproducible** (no manual steps)\
+-   **Scalable** (batch parallelization)\
+-   **Resistant to dynamic content loading**\
+-   **Free of fallback or artificial results**\
+-   **High-quality structured output**
+
+This dataset now provides an excellent foundation for downstream tasks such as statistical modeling, price comparisons, mapping, or machine learning.
